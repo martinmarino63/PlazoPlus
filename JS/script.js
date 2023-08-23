@@ -21,22 +21,32 @@ while (realizarOtroPlazoFijo) {
         return `${index + 1}. ${banco.nombre}\n   Tasa No Cliente: ${banco.tasaNoCliente * 100}%\n   Tasa Cliente: ${banco.tasaCliente * 100}%\n   Monto Mínimo: $${banco.montoMinimo}\n   Monto Máximo: $${banco.montoMaximo}\n   Tiempo Mínimo: ${banco.tiempoMinimo}\n   Tiempo Máximo: ${banco.tiempoMaximo}`;
     }).join('\n\n');
 
+    console.log('Opciones de bancos:\n', opcionesBancos);
     const seleccion = prompt(`Elige un banco:\n${opcionesBancos}`);
+    console.log('Selección:', seleccion);
     const bancoSeleccionado = bancos[seleccion - 1];
+    console.log('Banco seleccionado:', bancoSeleccionado);
 
     if (bancoSeleccionado) {
         const esCliente = confirm('¿Eres cliente del banco?');
         const clienteTexto = esCliente ? 'Sí' : 'No';
 
+        console.log('Cliente:', clienteTexto);
         const tasa = esCliente ? bancoSeleccionado.tasaCliente : bancoSeleccionado.tasaNoCliente;
 
+        console.log('Tasa de interés:', tasa);
+
         const montoIngresado = parseInt(prompt(`Ingresa el monto a ingresar (entre ${bancoSeleccionado.montoMinimo} y ${bancoSeleccionado.montoMaximo}):`));
+        console.log('Monto ingresado:', montoIngresado);
+
         if (montoIngresado < bancoSeleccionado.montoMinimo || montoIngresado > bancoSeleccionado.montoMaximo) {
             alert('Monto ingresado fuera del rango válido');
             continue;
         }
 
         const diasIngresados = parseInt(prompt(`Ingresa los días a colocar (entre ${bancoSeleccionado.tiempoMinimo} y ${bancoSeleccionado.tiempoMaximo}):`));
+        console.log('Días ingresados:', diasIngresados);
+
         if (diasIngresados < bancoSeleccionado.tiempoMinimo || diasIngresados > bancoSeleccionado.tiempoMaximo) {
             alert('Días ingresados fuera del rango válido');
             continue;
@@ -44,6 +54,8 @@ while (realizarOtroPlazoFijo) {
 
         let montoFinal = montoIngresado * Math.pow(1 + tasa, diasIngresados / 365);
         montoFinal = Math.floor(montoFinal);
+
+        console.log('Monto final:', montoFinal);
 
         alert(`Has seleccionado el banco: ${bancoSeleccionado.nombre}\nCliente: ${clienteTexto}\nEl monto ingresado es de $${montoIngresado}\nLos días a ingresar son ${diasIngresados} días\n\nMonto obtenido al finalizar el plazo fijo: $${montoFinal}`);
 
@@ -54,4 +66,6 @@ while (realizarOtroPlazoFijo) {
     }
 }
 
-alert('¡Gracias por usar nuestro servicio de plazos fijos!');
+console.log('Gracias por usar nuestro servicio de plazos fijos!');
+
+alert('¡Gracias por usar nuestro servicio de plazos fijos!'); 
