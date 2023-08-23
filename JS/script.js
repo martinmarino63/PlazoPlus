@@ -1,63 +1,57 @@
-// En este primer entregable se realizará un breve simulador replicando el cálculo de interés TNA del plazo fijo.
-// TNA = 97%, cantidad mínima 30 días, máxima 365 días
-// El usuario ingresará el monto a colocar y luego se le pedirá cuantos días desea.
-// Al finalizar, se le mostrará al usuario el interés obtenido junto al monto total
-
-const TNA = 0.97; // Constante de la tasa TNA
-const unidadTiempo = 365;
-
-const obtenerResultado = (montoInicial, tiempoDeseado) => {
-    return (montoInicial * TNA * tiempoDeseado) / unidadTiempo;
-};
-
-const montoFinal = (resultado, montoInicial) => {
-    return resultado + montoInicial;
-};
-
-alert('Hola, gracias por utilizar el simulador de plazo fijo TNA. Por favor, complete los siguientes datos.');
-
-let montoInicial;
-let tiempoDeseado;
-
-do {
-    const userInput = prompt('Ingrese el monto inicial a colocar: (Monto mínimo: 50000)');
-    if (userInput === null) {
-        alert('Se ha cancelado la solicitud.');
-        break;
-    } else {
-        montoInicial = parseInt(userInput);
-        console.log(montoFinal)
-        if (isNaN(montoInicial)) {
-            alert('Error: Debe ingresar un número.');
-        } else if (montoInicial < 50000) {
-            alert('Error: El monto mínimo es 50000.');
-        }
-    }
-} while (isNaN(montoInicial) || montoInicial < 50000);
-
-if (montoInicial >= 50000) {
-    do {
-        const userInput = prompt('Ingrese el tiempo deseado a invertir: (Mínimo 30 días, máximo 365)');
-        if (userInput === null) {
-            alert('Se ha cancelado la solicitud.');
-            break;
-        } else {
-            tiempoDeseado = parseInt(userInput);
-            console.log(tiempoDeseado);
-            if (isNaN(tiempoDeseado)) {
-                alert('Error: Debe ingresar la cantidad de días en números.');
-            } else if (tiempoDeseado < 30) {
-                alert('Error: El tiempo mínimo es 30 días.');
-            } else if (tiempoDeseado > 365) {
-                alert('Error: El tiempo máximo es de 365 días.');
-            }
-        }
-    } while (isNaN(tiempoDeseado) || tiempoDeseado < 30 || tiempoDeseado > 365);
-
-    let resultado = obtenerResultado(montoInicial, tiempoDeseado);
-    console.log(resultado);
-    let resultadoCompuesto = montoFinal(resultado, montoInicial)
-    console.log(resultadoCompuesto);
-    alert('El resultado de tu plazo fijo es: $' + Math.round(resultado) + ' en un tiempo de ' + tiempoDeseado + ' días');
-    alert('El monto total a obtener finalizado el período es de: $' + Math.round(resultadoCompuesto));
+function Banco(nombre, tasaNoCliente, tasaCliente, montoMinimo, montoMaximo, tiempoMinimo, tiempoMaximo) {
+    this.nombre = nombre;
+    this.tasaNoCliente = tasaNoCliente;
+    this.tasaCliente = tasaCliente;
+    this.montoMinimo = montoMinimo;
+    this.montoMaximo = montoMaximo;
+    this.tiempoMinimo = tiempoMinimo;
+    this.tiempoMaximo = tiempoMaximo;
 }
+
+const bancos = [
+    new Banco('Banco Nación', 1.0, 1.3, 50000, 1000000, '30 días', '365 días'),
+    new Banco('Banco Santander', 0.97, 1.28, 100000, 2000000, '60 días', '365 días'),
+    new Banco('Banco BBVA', 1.05, 1.45, 500000, 2000000, '90 días', '365 días')
+];
+
+let realizarOtroPlazoFijo = true;
+
+while (realizarOtroPlazoFijo) {
+    const opcionesBancos = bancos.map((banco, index) => {
+        return `${index + 1}. ${banco.nombre}\n   Tasa No Cliente: ${banco.tasaNoCliente * 100}%\n   Tasa Cliente: ${banco.tasaCliente * 100}%\n   Monto Mínimo: $${banco.montoMinimo}\n   Monto Máximo: $${banco.montoMaximo}\n   Tiempo Mínimo: ${banco.tiempoMinimo}\n   Tiempo Máximo: ${banco.tiempoMaximo}`;
+    }).join('\n\n');
+
+    const seleccion = prompt(`Elige un banco:\n${opcionesBancos}`);
+    const bancoSeleccionado = bancos[seleccion - 1];
+
+    if (bancoSeleccionado) {
+        const esCliente = confirm('¿Eres cliente del banco?');
+        const clienteTexto = esCliente ? 'Sí' : 'No';
+
+        const tasa = esCliente ? bancoSeleccionado.tasaCliente : bancoSeleccionado.tasaNoCliente;
+
+        const montoIngresado = parseInt(prompt(`Ingresa el monto a ingresar (entre ${bancoSeleccionado.montoMinimo} y ${bancoSeleccionado.montoMaximo}):`));
+        if (montoIngresado < bancoSeleccionado.montoMinimo || montoIngresado > bancoSeleccionado.montoMaximo) {
+            alert('Monto ingresado fuera del rango válido');
+            continue;
+        }
+
+        const diasIngresados = parseInt(prompt(`Ingresa los días a colocar (entre ${bancoSeleccionado.tiempoMinimo} y ${bancoSeleccionado.tiempoMaximo}):`));
+        if (diasIngresados < bancoSeleccionado.tiempoMinimo || diasIngresados > bancoSeleccionado.tiempoMaximo) {
+            alert('Días ingresados fuera del rango válido');
+            continue;
+        }
+
+        let montoFinal = montoIngresado * Math.pow(1 + tasa, diasIngresados / 365);
+        montoFinal = Math.floor(montoFinal);
+
+        alert(`Has seleccionado el banco: ${bancoSeleccionado.nombre}\nCliente: ${clienteTexto}\nEl monto ingresado es de $${montoIngresado}\nLos días a ingresar son ${diasIngresados} días\n\nMonto obtenido al finalizar el plazo fijo: $${montoFinal}`);
+
+        realizarOtroPlazoFijo = confirm('¿Quieres realizar otro plazo fijo?');
+    } else {
+        alert('Selección inválida');
+        realizarOtroPlazoFijo = confirm('¿Quieres realizar otro plazo fijo?');
+    }
+}
+
+alert('¡Gracias por usar nuestro servicio de plazos fijos!');
