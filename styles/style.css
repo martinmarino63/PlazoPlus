@@ -18,13 +18,14 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 1rem auto;
+    margin: 0 auto;
     background-color: #f2f2f2;
     width: 90%;
 }
 
 
 .formulario {
+    margin-top: 1rem;
     background-color: #ffffff;
     border-radius: 8px;
     padding: 20px;
@@ -78,6 +79,7 @@ button:hover {
     max-width: 400px;
     display: none;
     width: 100%;
+    margin-bottom: 1rem;
 }
 
 #ultimaSimulacion h2 {
