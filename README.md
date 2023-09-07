@@ -1,20 +1,38 @@
-# Plazos Fijos Bancarios
+# Simulador de Plazos Fijos Bancarios
 
-Este es un programa simple en JavaScript que simula la interacción con diferentes bancos para calcular los intereses en un plazo fijo. El programa te permite seleccionar un banco, ingresar el monto y los días para el plazo fijo, y luego calcula el monto final con los intereses correspondientes.
+Este es un simulador de plazos fijos bancarios desarrollado en JavaScript y HTML. Permite a los usuarios seleccionar un banco, ingresar el monto y los días para el plazo fijo, y calcular el monto final con los intereses correspondientes.
 
-## Funcionamiento
+## Funcionalidad
 
-1. **Constructor de Banco**: Se define un constructor llamado `Banco` que crea instancias de bancos con diferentes atributos como el nombre del banco, tasas de interés para clientes y no clientes, montos mínimos y máximos, y tiempos mínimos y máximos para el plazo fijo.
+### Selección de Banco
 
-2. **Creación de Bancos**: Se crean instancias de bancos utilizando el constructor `Banco` y se almacenan en un arreglo llamado `bancos`.
+- El usuario puede seleccionar un banco de la lista desplegable en el formulario.
+- Los detalles del banco seleccionado se muestran en la sección "Detalles del Banco Seleccionado" en tiempo real.
 
-3. **Interacción con el Usuario**: Mediante un bucle `while`, el programa interactúa con el usuario a través de prompts y confirmaciones. Se muestran las opciones de bancos disponibles y se permite al usuario elegir uno.
+### Ingreso de Datos
 
-4. **Cálculo y Validación**: Una vez seleccionado el banco, el programa pregunta al usuario si es cliente del banco y luego solicita el monto y los días para el plazo fijo. Se validan los valores ingresados para asegurarse de que estén dentro de los rangos permitidos.
+- El usuario debe ingresar el monto a invertir y el número de días para el plazo fijo.
+- También puede indicar si es cliente del banco seleccionando la casilla de verificación correspondiente.
 
-5. **Cálculo de Monto Final**: Utilizando la fórmula de interés compuesto, se calcula el monto final del plazo fijo. Luego, se muestra una alerta con los detalles de la selección del banco, el cliente, el monto y los días ingresados, así como el monto final obtenido al finalizar el plazo fijo.
+### Validación de Datos
 
-6. **Continuar o Salir**: Después de cada ciclo de interacción, el programa pregunta al usuario si desea realizar otro plazo fijo. Si el usuario desea continuar, el ciclo se repite. Si no, se muestra un mensaje de despedida.
+- Se realizan controles de validación para asegurarse de que los valores ingresados estén dentro de los rangos permitidos por el banco seleccionado.
+
+### Cálculo del Monto Final
+
+- Se calcula el monto final utilizando la fórmula de interés compuesto con la tasa de interés del banco.
+- El resultado se muestra en la sección "Última Simulación" junto con otros detalles.
+
+### Historial y Limpieza
+
+- Cada simulación se almacena en el historial del navegador, lo que permite a los usuarios ver la última simulación realizada.
+- Los usuarios también pueden borrar su historial con el botón "Borrar Historial".
+
+## Tecnologías Utilizadas
+
+- JavaScript: Para la lógica de la aplicación.
+- HTML: Para la estructura de la página web.
+- CSS (archivo no proporcionado): Para el estilo visual de la aplicación.
 
 ## Ejecución
 
@@ -23,11 +41,6 @@ Este es un programa simple en JavaScript que simula la interacción con diferent
 2. Abre el archivo `index.html` en tu navegador web.
 
 3. Sigue las instrucciones en pantalla para realizar diferentes simulaciones de plazos fijos.
-
-## Tecnologías Utilizadas
-
-- JavaScript
-- HTML
 
 ## Contribución
 
