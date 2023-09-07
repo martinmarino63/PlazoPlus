@@ -22,7 +22,7 @@ const montoIngresadoInput = document.getElementById('montoIngresado');
 const diasIngresadosInput = document.getElementById('diasIngresados');
 const esClienteCheckbox = document.getElementById('esCliente');
 const calcularButton = document.getElementById('calcular');
-const montosOutput = document.getElementById('montosOutput');
+const errorOutput = document.getElementById('errorOutput');
 const diasOutput = document.getElementById('dias');
 const bancoSelect = document.getElementById('banco');
 
@@ -77,11 +77,10 @@ calcularButton.addEventListener('click', () => {
         montoIngresado > bancoSeleccionado.montoMaximo ||
         diasIngresados < bancoSeleccionado.tiempoMinimo ||
         diasIngresados > bancoSeleccionado.tiempoMaximo) {
-        montosOutput.textContent = 'Revisa los valores.';
+        errorOutput.textContent = 'Revisa los valores.';
         console.log('Datos inválidos o fuera de rango.');
-        diasOutput.textContent = '';
         return;
-    } else montosOutput.textContent = '';
+    } else errorOutput.textContent = '';
 
 
     const tasa = esCliente ? bancoSeleccionado.tasaCliente : bancoSeleccionado.tasaNoCliente;
@@ -112,12 +111,25 @@ calcularButton.addEventListener('click', () => {
 
 
 const borrarHistorialButton = document.getElementById('borrarHistorial');
+
 borrarHistorialButton.addEventListener('click', () => {
-    localStorage.removeItem('ultimaSimulacion');
-    console.log('Se ha limpiado el historial')
-    const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
-    ultimaSimulacionDiv.style.display = 'none';
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Esta acción eliminará el historial. ¿Deseas continuar?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, borrar historial',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            localStorage.removeItem('ultimaSimulacion');
+            console.log('Se ha limpiado el historial');
+            const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
+            ultimaSimulacionDiv.style.display = 'none';
+        }
+    });
 });
+
 
 
 
