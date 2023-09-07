@@ -94,3 +94,7 @@ button:hover {
     font-weight: bold;
     font-size: 14px;
 }
+
+div:where(.swal2-container) div:where(.swal2-actions) {
+    width: 90% !important
+}

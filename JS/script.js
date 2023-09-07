@@ -63,14 +63,11 @@ actualizarDetallesBanco(bancoSeleccionadoInicial);
 
 
 calcularButton.addEventListener('click', () => {
-
     const montoIngresado = parseInt(montoIngresadoInput.value);
     const diasIngresados = parseInt(diasIngresadosInput.value);
     const esCliente = esClienteCheckbox.checked;
 
-
     const bancoSeleccionado = bancos[bancoSelect.selectedIndex];
-
 
     if (isNaN(montoIngresado) || isNaN(diasIngresados) ||
         montoIngresado < bancoSeleccionado.montoMinimo ||
@@ -82,11 +79,8 @@ calcularButton.addEventListener('click', () => {
         return;
     } else errorOutput.textContent = '';
 
-
     const tasa = esCliente ? bancoSeleccionado.tasaCliente : bancoSeleccionado.tasaNoCliente;
     const montoFinal = realizarCalculo(montoIngresado, tasa, diasIngresados);
-    console.log(montoFinal);
-
 
     const simulacion = {
         bancoSeleccionado: bancoSeleccionado.nombre,
@@ -95,18 +89,51 @@ calcularButton.addEventListener('click', () => {
         diasIngresados: diasIngresados,
         tasa: (tasa * 100) + '%'
     };
-    localStorage.setItem('ultimaSimulacion', JSON.stringify(simulacion));
-    console.log(simulacion, 'Guardado en localStorage');
 
+    // Mostrar resumen de la simulación
+    Swal.fire({
+        title: 'Resumen de Simulación',
+        icon: 'info',
+        html: `
+            <p><strong>Has seleccionado:</strong> ${simulacion.bancoSeleccionado}</p>
+            <p><strong>El monto ha invertir es de:</strong> $${simulacion.montoIngresado}</p>
+            <p><strong>Invertirás por:</strong> ${simulacion.diasIngresados} días</p>
+            <p><strong>A una tasa de interés de:</strong> ${simulacion.tasa}</p>
+        `,
+        showCancelButton: true,
+        confirmButtonText: 'Confirmar Simulación',
+        cancelButtonText: 'Cancelar'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Mostrar resultado de la simulación y agradecimiento
+            Swal.fire({
+                title: 'Simulación Exitosa',
+                icon: 'success',
+                html: `
+                <p>A continuación, te presentamos el resultado de la simulación:</p>
+                <p><strong>Invirtiendo en:</strong> ${simulacion.bancoSeleccionado}</p>
+                <p><strong>Con un monto de:</strong> $${simulacion.montoIngresado}</p>
+                <p><strong>Por:</strong> ${simulacion.diasIngresados} días</p>
+                <p><strong>A una tasa de interés de:</strong> ${simulacion.tasa}</p>
+                <br>
+                <p><strong>Recibirás el siguiente monto:</strong> $${simulacion.montoFinal}</p>
+                <p>¡Gracias por utilizar nuestro simulador!</p>
+                `,
+                confirmButtonText: 'Finalizar Simulación',
+            });
 
-    const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
-    ultimaSimulacionDiv.style.display = 'block';
-    document.getElementById('nombreBancoSeleccionadoUltima').textContent = `Banco Seleccionado: ${simulacion.bancoSeleccionado}`;
-    document.getElementById('montoIngresadoUltima').textContent = `Monto a invertir: $${simulacion.montoIngresado}`;
-    document.getElementById('montoFinalUltima').textContent = `Monto al finalizar: $${simulacion.montoFinal}`;
-    document.getElementById('diasIngresadosUltima').textContent = `Días a invertir: ${simulacion.diasIngresados} días`;
-    document.getElementById('tasaUltima').textContent = `Tasa de interés: ${simulacion.tasa}`;
+            // Guardar en localStorage (opcional)
+            localStorage.setItem('ultimaSimulacion', JSON.stringify(simulacion));
+            console.log('Simulación Guardada en localStorage:', simulacion);
+
+            // Limpiar campos (opcional)
+            montoIngresadoInput.value = '';
+            diasIngresadosInput.value = '';
+            esClienteCheckbox.checked = false;
+        }
+    });
 });
+
 
 
 
