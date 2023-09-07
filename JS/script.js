@@ -34,7 +34,7 @@ bancos.forEach((banco, index) => {
 });
 
 
-function actualizarDetallesBanco(bancoSeleccionado) {
+const actualizarDetallesBanco = (bancoSeleccionado) => {
     const tasaNoClienteDetalle = document.getElementById('tasaNoClienteDetalle');
     const tasaClienteDetalle = document.getElementById('tasaClienteDetalle');
     const montoMinimoDetalle = document.getElementById('montoMinimoDetalle');
@@ -52,6 +52,28 @@ function actualizarDetallesBanco(bancoSeleccionado) {
     tiempoMinimoDetalle.textContent = `Tiempo Mínimo (días): ${bancoSeleccionado.tiempoMinimo}`;
     tiempoMaximoDetalle.textContent = `Tiempo Máximo (días): ${bancoSeleccionado.tiempoMaximo}`;
 }
+
+
+const actualizarUltimaSimulacion = () => {
+    const ultimaSimulacionJSON = localStorage.getItem('ultimaSimulacion');
+    const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
+    const montoIngresadoUltima = document.getElementById('montoIngresadoUltima');
+    const montoFinalUltima = document.getElementById('montoFinalUltima');
+    const diasIngresadosUltima = document.getElementById('diasIngresadosUltima');
+    const tasaUltima = document.getElementById('tasaUltima');
+
+    if (ultimaSimulacionJSON) {
+        const ultimaSimulacion = JSON.parse(ultimaSimulacionJSON);
+        console.log(ultimaSimulacion);
+
+        ultimaSimulacionDiv.style.display = 'block';
+        montoIngresadoUltima.textContent = `Monto a invertir: $${ultimaSimulacion.montoIngresado}`;
+        montoFinalUltima.textContent = `Monto al finalizar: $${ultimaSimulacion.montoFinal}`;
+        diasIngresadosUltima.textContent = `Días a invertir: ${ultimaSimulacion.diasIngresados} días`;
+        tasaUltima.textContent = `Tasa de interés: ${ultimaSimulacion.tasa}`;
+    }
+}
+
 
 bancoSelect.addEventListener('change', () => {
     const bancoSeleccionado = bancos[bancoSelect.selectedIndex];
@@ -90,13 +112,12 @@ calcularButton.addEventListener('click', () => {
         tasa: (tasa * 100) + '%'
     };
 
-    // Mostrar resumen de la simulación
     Swal.fire({
         title: 'Resumen de Simulación',
         icon: 'info',
         html: `
             <p><strong>Has seleccionado:</strong> ${simulacion.bancoSeleccionado}</p>
-            <p><strong>El monto ha invertir es de:</strong> $${simulacion.montoIngresado}</p>
+            <p><strong>El monto a invertir es de:</strong> $${simulacion.montoIngresado}</p>
             <p><strong>Invertirás por:</strong> ${simulacion.diasIngresados} días</p>
             <p><strong>A una tasa de interés de:</strong> ${simulacion.tasa}</p>
         `,
@@ -105,7 +126,11 @@ calcularButton.addEventListener('click', () => {
         cancelButtonText: 'Cancelar'
     }).then((result) => {
         if (result.isConfirmed) {
-            // Mostrar resultado de la simulación y agradecimiento
+            localStorage.setItem('ultimaSimulacion', JSON.stringify(simulacion));
+            console.log('Simulación Guardada en localStorage:', simulacion);
+            montoIngresadoInput.value = '';
+            diasIngresadosInput.value = '';
+            esClienteCheckbox.checked = false;
             Swal.fire({
                 title: 'Simulación Exitosa',
                 icon: 'success',
@@ -120,21 +145,12 @@ calcularButton.addEventListener('click', () => {
                 <p>¡Gracias por utilizar nuestro simulador!</p>
                 `,
                 confirmButtonText: 'Finalizar Simulación',
+            }).then(() => {
+                actualizarUltimaSimulacion();
             });
-
-            // Guardar en localStorage (opcional)
-            localStorage.setItem('ultimaSimulacion', JSON.stringify(simulacion));
-            console.log('Simulación Guardada en localStorage:', simulacion);
-
-            // Limpiar campos (opcional)
-            montoIngresadoInput.value = '';
-            diasIngresadosInput.value = '';
-            esClienteCheckbox.checked = false;
         }
     });
 });
-
-
 
 
 const borrarHistorialButton = document.getElementById('borrarHistorial');
@@ -158,19 +174,4 @@ borrarHistorialButton.addEventListener('click', () => {
 });
 
 
-
-
-
-window.addEventListener('load', () => {
-    const ultimaSimulacionJSON = localStorage.getItem('ultimaSimulacion');
-    if (ultimaSimulacionJSON) {
-        const ultimaSimulacion = JSON.parse(ultimaSimulacionJSON);
-        console.log(ultimaSimulacion)
-        const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
-        ultimaSimulacionDiv.style.display = 'block';
-        document.getElementById('montoIngresadoUltima').textContent = `Monto a invertir: $${ultimaSimulacion.montoIngresado}`;
-        document.getElementById('montoFinalUltima').textContent = `Monto al finalizar: $${ultimaSimulacion.montoFinal}`;
-        document.getElementById('diasIngresadosUltima').textContent = `Días a invertir: ${ultimaSimulacion.diasIngresados} días`;
-        document.getElementById('tasaUltima').textContent = `Tasa de interés: ${ultimaSimulacion.tasa}`;
-    }
-});
+window.addEventListener('load', actualizarUltimaSimulacion);
