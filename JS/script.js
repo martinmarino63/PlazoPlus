@@ -9,63 +9,129 @@ function Banco(nombre, tasaNoCliente, tasaCliente, montoMinimo, montoMaximo, tie
 }
 
 const bancos = [
-    new Banco('Banco Nación', 1.0, 1.3, 50000, 1000000, '30 días', '365 días'),
-    new Banco('Banco Santander', 0.97, 1.28, 100000, 2000000, '60 días', '365 días'),
-    new Banco('Banco BBVA', 1.05, 1.45, 500000, 2000000, '90 días', '365 días')
+    new Banco('Banco Nación', 1.00, 1.30, 50000, 1000000, 30, 365),
+    new Banco('Banco Santander', 0.97, 1.28, 100000, 2000000, 60, 365),
+    new Banco('Banco BBVA', 1.05, 1.45, 500000, 2000000, 90, 365)
 ];
 
-let realizarOtroPlazoFijo = true;
-
-while (realizarOtroPlazoFijo) {
-    const opcionesBancos = bancos.map((banco, index) => {
-        return `${index + 1}. ${banco.nombre}\n   Tasa No Cliente: ${banco.tasaNoCliente * 100}%\n   Tasa Cliente: ${banco.tasaCliente * 100}%\n   Monto Mínimo: $${banco.montoMinimo}\n   Monto Máximo: $${banco.montoMaximo}\n   Tiempo Mínimo: ${banco.tiempoMinimo}\n   Tiempo Máximo: ${banco.tiempoMaximo}`;
-    }).join('\n\n');
-
-    console.log('Opciones de bancos:\n', opcionesBancos);
-    const seleccion = prompt(`Elige un banco:\n${opcionesBancos}`);
-    console.log('Selección:', seleccion);
-    const bancoSeleccionado = bancos[seleccion - 1];
-    console.log('Banco seleccionado:', bancoSeleccionado);
-
-    if (bancoSeleccionado) {
-        const esCliente = confirm('¿Eres cliente del banco?');
-        const clienteTexto = esCliente ? 'Sí' : 'No';
-
-        console.log('Cliente:', clienteTexto);
-        const tasa = esCliente ? bancoSeleccionado.tasaCliente : bancoSeleccionado.tasaNoCliente;
-
-        console.log('Tasa de interés:', tasa);
-
-        const montoIngresado = parseInt(prompt(`Ingresa el monto a ingresar (entre ${bancoSeleccionado.montoMinimo} y ${bancoSeleccionado.montoMaximo}):`));
-        console.log('Monto ingresado:', montoIngresado);
-
-        if (montoIngresado < bancoSeleccionado.montoMinimo || montoIngresado > bancoSeleccionado.montoMaximo) {
-            alert('Monto ingresado fuera del rango válido');
-            continue;
-        }
-
-        const diasIngresados = parseInt(prompt(`Ingresa los días a colocar (entre ${bancoSeleccionado.tiempoMinimo} y ${bancoSeleccionado.tiempoMaximo}):`));
-        console.log('Días ingresados:', diasIngresados);
-
-        if (diasIngresados < bancoSeleccionado.tiempoMinimo || diasIngresados > bancoSeleccionado.tiempoMaximo) {
-            alert('Días ingresados fuera del rango válido');
-            continue;
-        }
-
-        let montoFinal = montoIngresado * Math.pow(1 + tasa, diasIngresados / 365);
-        montoFinal = Math.floor(montoFinal);
-
-        console.log('Monto final:', montoFinal);
-
-        alert(`Has seleccionado el banco: ${bancoSeleccionado.nombre}\nCliente: ${clienteTexto}\nEl monto ingresado es de $${montoIngresado}\nLos días a ingresar son ${diasIngresados} días\n\nMonto obtenido al finalizar el plazo fijo: $${montoFinal}`);
-
-        realizarOtroPlazoFijo = confirm('¿Quieres realizar otro plazo fijo?');
-    } else {
-        alert('Selección inválida');
-        realizarOtroPlazoFijo = confirm('¿Quieres realizar otro plazo fijo?');
-    }
+const realizarCalculo = (montoIngresado, tasa, diasIngresados) => {
+    return montoFinal = Math.floor(montoIngresado * Math.pow(1 + tasa, diasIngresados / 365));
 }
 
-console.log('Gracias por usar nuestro servicio de plazos fijos!');
+const montoIngresadoInput = document.getElementById('montoIngresado');
+const diasIngresadosInput = document.getElementById('diasIngresados');
+const esClienteCheckbox = document.getElementById('esCliente');
+const calcularButton = document.getElementById('calcular');
+const montosOutput = document.getElementById('montosOutput');
+const diasOutput = document.getElementById('dias');
+const bancoSelect = document.getElementById('banco');
 
-alert('¡Gracias por usar nuestro servicio de plazos fijos!'); 
+bancos.forEach((banco, index) => {
+    const option = document.createElement('option');
+    option.value = index;
+    option.textContent = banco.nombre;
+    bancoSelect.appendChild(option);
+});
+
+
+function actualizarDetallesBanco(bancoSeleccionado) {
+    const tasaNoClienteDetalle = document.getElementById('tasaNoClienteDetalle');
+    const tasaClienteDetalle = document.getElementById('tasaClienteDetalle');
+    const montoMinimoDetalle = document.getElementById('montoMinimoDetalle');
+    const montoMaximoDetalle = document.getElementById('montoMaximoDetalle');
+    const tiempoMinimoDetalle = document.getElementById('tiempoMinimoDetalle');
+    const tiempoMaximoDetalle = document.getElementById('tiempoMaximoDetalle');
+
+    const tasaNoClienteFormateada = (bancoSeleccionado.tasaNoCliente * 100).toFixed(2) + '%';
+    const tasaClienteFormateada = (bancoSeleccionado.tasaCliente * 100).toFixed(2) + '%';
+
+    tasaNoClienteDetalle.textContent = `Tasa (No Cliente): ${tasaNoClienteFormateada}`;
+    tasaClienteDetalle.textContent = `Tasa (Cliente): ${tasaClienteFormateada}`;
+    montoMinimoDetalle.textContent = `Monto Mínimo: $${bancoSeleccionado.montoMinimo}`;
+    montoMaximoDetalle.textContent = `Monto Máximo: $${bancoSeleccionado.montoMaximo}`;
+    tiempoMinimoDetalle.textContent = `Tiempo Mínimo (días): ${bancoSeleccionado.tiempoMinimo}`;
+    tiempoMaximoDetalle.textContent = `Tiempo Máximo (días): ${bancoSeleccionado.tiempoMaximo}`;
+}
+
+bancoSelect.addEventListener('change', () => {
+    const bancoSeleccionado = bancos[bancoSelect.selectedIndex];
+    actualizarDetallesBanco(bancoSeleccionado);
+});
+
+const bancoSeleccionadoInicial = bancos[0];
+actualizarDetallesBanco(bancoSeleccionadoInicial);
+
+
+calcularButton.addEventListener('click', () => {
+
+    const montoIngresado = parseInt(montoIngresadoInput.value);
+    const diasIngresados = parseInt(diasIngresadosInput.value);
+    const esCliente = esClienteCheckbox.checked;
+
+
+    const bancoSeleccionado = bancos[bancoSelect.selectedIndex];
+
+
+    if (isNaN(montoIngresado) || isNaN(diasIngresados) ||
+        montoIngresado < bancoSeleccionado.montoMinimo ||
+        montoIngresado > bancoSeleccionado.montoMaximo ||
+        diasIngresados < bancoSeleccionado.tiempoMinimo ||
+        diasIngresados > bancoSeleccionado.tiempoMaximo) {
+        montosOutput.textContent = 'Revisa los valores.';
+        console.log('Datos inválidos o fuera de rango.');
+        diasOutput.textContent = '';
+        return;
+    } else montosOutput.textContent = '';
+
+
+    const tasa = esCliente ? bancoSeleccionado.tasaCliente : bancoSeleccionado.tasaNoCliente;
+    const montoFinal = realizarCalculo(montoIngresado, tasa, diasIngresados);
+    console.log(montoFinal);
+
+
+    const simulacion = {
+        bancoSeleccionado: bancoSeleccionado.nombre,
+        montoIngresado: montoIngresado,
+        montoFinal: montoFinal,
+        diasIngresados: diasIngresados,
+        tasa: (tasa * 100) + '%'
+    };
+    localStorage.setItem('ultimaSimulacion', JSON.stringify(simulacion));
+    console.log(simulacion, 'Guardado en localStorage');
+
+
+    const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
+    ultimaSimulacionDiv.style.display = 'block';
+    document.getElementById('nombreBancoSeleccionadoUltima').textContent = `Banco Seleccionado: ${simulacion.bancoSeleccionado}`;
+    document.getElementById('montoIngresadoUltima').textContent = `Monto a invertir: $${simulacion.montoIngresado}`;
+    document.getElementById('montoFinalUltima').textContent = `Monto al finalizar: $${simulacion.montoFinal}`;
+    document.getElementById('diasIngresadosUltima').textContent = `Días a invertir: ${simulacion.diasIngresados} días`;
+    document.getElementById('tasaUltima').textContent = `Tasa de interés: ${simulacion.tasa}`;
+});
+
+
+
+const borrarHistorialButton = document.getElementById('borrarHistorial');
+borrarHistorialButton.addEventListener('click', () => {
+    localStorage.removeItem('ultimaSimulacion');
+    console.log('Se ha limpiado el historial')
+    const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
+    ultimaSimulacionDiv.style.display = 'none';
+});
+
+
+
+
+window.addEventListener('load', () => {
+    const ultimaSimulacionJSON = localStorage.getItem('ultimaSimulacion');
+    if (ultimaSimulacionJSON) {
+        const ultimaSimulacion = JSON.parse(ultimaSimulacionJSON);
+        console.log(ultimaSimulacion)
+        const ultimaSimulacionDiv = document.getElementById('ultimaSimulacion');
+        ultimaSimulacionDiv.style.display = 'block';
+        document.getElementById('montoIngresadoUltima').textContent = `Monto a invertir: $${ultimaSimulacion.montoIngresado}`;
+        document.getElementById('montoFinalUltima').textContent = `Monto al finalizar: $${ultimaSimulacion.montoFinal}`;
+        document.getElementById('diasIngresadosUltima').textContent = `Días a invertir: ${ultimaSimulacion.diasIngresados} días`;
+        document.getElementById('tasaUltima').textContent = `Tasa de interés: ${ultimaSimulacion.tasa}`;
+    }
+});

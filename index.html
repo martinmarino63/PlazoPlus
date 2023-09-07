@@ -4,10 +4,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PreEntrega1-JS-55730-MarinoUviedoMartin</title>
+    <title>PreEntrega3-JS-55730-MarinoUviedoMartin</title>
+    <link rel="stylesheet" href="./styles/style.css">
 </head>
 
 <body>
+    <div class="container">
+        <div class="formulario">
+            <h1>Simulador de plazos fijos</h1>
+
+            <label for="banco">Selecciona el banco:</label>
+            <select name="banco" id="banco">
+            </select>
+
+            <div id="bancoDetails" class="bancoDetails">
+                <h2>Detalles del Banco Seleccionado</h2>
+                <p id="tasaNoClienteDetalle"></p>
+                <p id="tasaClienteDetalle"></p>
+                <p id="montoMinimoDetalle"></p>
+                <p id="montoMaximoDetalle"></p>
+                <p id="tiempoMinimoDetalle"></p>
+                <p id="tiempoMaximoDetalle"></p>
+            </div>
+
+            <label>Monto a ingresar</label>
+            <input type="number" name="montoIngresado" id="montoIngresado" min="0" max="0" required>
+            <br>
+            <label>Días a invertir</label>
+            <input type="number" name="diasIngresados" id="diasIngresados" min="0" max="0" required>
+            <br>
+            <label for="esCliente">¿Eres cliente del banco?</label>
+            <input type="checkbox" name="esCliente" id="esCliente">
+            <p id="montosOutput"></p>
+            <button type="submit" id="calcular">Calcular</button>
+        </div>
+        <div id="ultimaSimulacion" class="ultimaSimulacion">
+            <h2>Última Simulación</h2>
+            <p id="nombreBancoSeleccionadoUltima"></p>
+            <p id="montoIngresadoUltima"></p>
+            <p id="montoFinalUltima"></p>
+            <p id="diasIngresadosUltima"></p>
+            <p id="tasaUltima"></p>
+            <button id="borrarHistorial">Borrar Historial</button>
+        </div>
+    </div>
 
     <script src="./JS/script.js" defer></script>
 </body>
