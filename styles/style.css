@@ -18,7 +18,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    margin: 0;
+    margin: 1rem auto;
     background-color: #f2f2f2;
     width: 90%;
 }
