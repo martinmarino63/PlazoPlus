@@ -32,7 +32,7 @@ Este es un simulador de plazos fijos bancarios desarrollado en JavaScript y HTML
 
 - JavaScript: Para la lógica de la aplicación.
 - HTML: Para la estructura de la página web.
-- CSS (archivo no proporcionado): Para el estilo visual de la aplicación.
+- CSS: Para el estilo visual de la aplicación.
 
 ## Ejecución
 
