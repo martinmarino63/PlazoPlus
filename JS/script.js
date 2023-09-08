@@ -61,12 +61,13 @@ const actualizarUltimaSimulacion = () => {
     const montoFinalUltima = document.getElementById('montoFinalUltima');
     const diasIngresadosUltima = document.getElementById('diasIngresadosUltima');
     const tasaUltima = document.getElementById('tasaUltima');
-
+    const nombreBancoSeleccionadoUltima = document.getElementById('nombreBancoSeleccionadoUltima')
     if (ultimaSimulacionJSON) {
         const ultimaSimulacion = JSON.parse(ultimaSimulacionJSON);
         console.log(ultimaSimulacion);
 
         ultimaSimulacionDiv.style.display = 'block';
+        nombreBancoSeleccionadoUltima.textContent = `Banco seleccionado: ${ultimaSimulacion.bancoSeleccionado}`;
         montoIngresadoUltima.textContent = `Monto a invertir: $${ultimaSimulacion.montoIngresado}`;
         montoFinalUltima.textContent = `Monto al finalizar: $${ultimaSimulacion.montoFinal}`;
         diasIngresadosUltima.textContent = `Días a invertir: ${ultimaSimulacion.diasIngresados} días`;
