@@ -3,7 +3,7 @@ const bancoSelect = document.getElementById('banco');
 
 const fetchData = async () => {
     try {
-        const res = await fetch('../json/bancos.json');
+        const res = await fetch('./json/bancos.json');
 
         if (!res.ok) {
             throw new Error(`Error al cargar datos (${res.status} ${res.statusText})`);
