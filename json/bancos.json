@@ -1,0 +1,29 @@
+[
+    {
+        "nombre": "Banco Nación",
+        "tasaNoCliente": 1.00,
+        "tasaCliente": 1.30,
+        "montoMinimo": 50000,
+        "montoMaximo": 1000000,
+        "tiempoMinimo": 30,
+        "tiempoMaximo": 365
+    },
+    {
+        "nombre": "Banco Santander",
+        "tasaNoCliente": 0.97,
+        "tasaCliente": 1.28,
+        "montoMinimo": 100000,
+        "montoMaximo": 2000000,
+        "tiempoMinimo": 60,
+        "tiempoMaximo": 365
+    },
+    {
+        "nombre": "Banco BBVA",
+        "tasaNoCliente": 1.05,
+        "tasaCliente": 1.45,
+        "montoMinimo": 500000,
+        "montoMaximo": 2000000,
+        "tiempoMinimo": 90,
+        "tiempoMaximo": 365
+    }
+]

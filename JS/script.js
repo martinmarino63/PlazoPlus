@@ -1,18 +1,37 @@
-function Banco(nombre, tasaNoCliente, tasaCliente, montoMinimo, montoMaximo, tiempoMinimo, tiempoMaximo) {
-    this.nombre = nombre;
-    this.tasaNoCliente = tasaNoCliente;
-    this.tasaCliente = tasaCliente;
-    this.montoMinimo = montoMinimo;
-    this.montoMaximo = montoMaximo;
-    this.tiempoMinimo = tiempoMinimo;
-    this.tiempoMaximo = tiempoMaximo;
+const bancos = [];
+const bancoSelect = document.getElementById('banco');
+
+const fetchData = async () => {
+    try {
+        const res = await fetch('../json/bancos.json');
+
+        if (!res.ok) {
+            throw new Error(`Error al cargar datos (${res.status} ${res.statusText})`);
+        }
+
+        const data = await res.json();
+
+        if (data.length === 0) {
+            console.error('No se encontraron datos en el archivo JSON.');
+            return;
+        }
+
+        bancos.push(...data);
+
+        const bancoSeleccionadoInicial = bancos[0];
+        actualizarDetallesBanco(bancoSeleccionadoInicial);
+
+        bancos.forEach((banco, index) => {
+            const option = document.createElement('option');
+            option.value = index;
+            option.textContent = banco.nombre;
+            bancoSelect.appendChild(option);
+        });
+    } catch (error) {
+        console.error('Error al cargar datos:', error);
+    }
 }
 
-const bancos = [
-    new Banco('Banco Nación', 1.00, 1.30, 50000, 1000000, 30, 365),
-    new Banco('Banco Santander', 0.97, 1.28, 100000, 2000000, 60, 365),
-    new Banco('Banco BBVA', 1.05, 1.45, 500000, 2000000, 90, 365)
-];
 
 const realizarCalculo = (montoIngresado, tasa, diasIngresados) => {
     return montoFinal = Math.floor(montoIngresado * Math.pow(1 + tasa, diasIngresados / 365));
@@ -24,7 +43,6 @@ const esClienteCheckbox = document.getElementById('esCliente');
 const calcularButton = document.getElementById('calcular');
 const errorOutput = document.getElementById('errorOutput');
 const diasOutput = document.getElementById('dias');
-const bancoSelect = document.getElementById('banco');
 
 bancos.forEach((banco, index) => {
     const option = document.createElement('option');
@@ -80,10 +98,6 @@ bancoSelect.addEventListener('change', () => {
     const bancoSeleccionado = bancos[bancoSelect.selectedIndex];
     actualizarDetallesBanco(bancoSeleccionado);
 });
-
-const bancoSeleccionadoInicial = bancos[0];
-actualizarDetallesBanco(bancoSeleccionadoInicial);
-
 
 calcularButton.addEventListener('click', () => {
     const montoIngresado = parseInt(montoIngresadoInput.value);
@@ -174,5 +188,7 @@ borrarHistorialButton.addEventListener('click', () => {
     });
 });
 
-
-window.addEventListener('load', actualizarUltimaSimulacion);
+window.addEventListener('load', () => {
+    fetchData();
+    actualizarUltimaSimulacion();
+});
